@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
 import theme from "./theme";
 import Home from "./pages/Home";
-import MainHeader from "./components/mainHeader";
+import MainHeader from "./components/MainHeader";
 
 function App() {
   return (

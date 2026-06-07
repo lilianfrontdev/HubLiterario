@@ -16,9 +16,13 @@ function Title({ text, highlightText }: TitleProps) {
         lineHeight: 1.2,
         mb: 3,
         color: "primary.contrastText",
+        width: "100%",          
+        maxWidth: "100%",       
+        boxSizing: "border-box",
+        wordBreak: "break-word" 
       }}
     >
-      <Box component="span" sx={{ display: "block" }}>
+      <Box component="span" sx={{ display: "block", maxWidth: "100%" }}>
         {text}
       </Box>
       
@@ -26,7 +30,8 @@ function Title({ text, highlightText }: TitleProps) {
         component="span" 
         sx={{ 
           display: "block", 
-          color: "#F0B84A" 
+          color: "#F0B84A",
+          maxWidth: "100%"
         }}
       >
         {highlightText}

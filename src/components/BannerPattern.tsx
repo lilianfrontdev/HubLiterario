@@ -10,9 +10,12 @@ function BannerPattern({ children, maxWidth = "md" }: BannerPatternProps) {
   return (
     <Box
       sx={{
+        width: "100%",           
+        maxWidth: "100%",        
+        boxSizing: "border-box",  
         color: "primary.contrastText",
         py: { xs: 6, sm: 8, md: 12 },
-        px: 2,
+        px: { xs: 2, sm: 3 },     
         textAlign: "center",
         position: "relative",
         backgroundColor: "#4D3225", 
@@ -24,7 +27,12 @@ function BannerPattern({ children, maxWidth = "md" }: BannerPatternProps) {
         backgroundSize: "40px 40px", 
       }}
     >
-      <Container maxWidth={maxWidth}>
+      <Container 
+        maxWidth={maxWidth}
+        sx={{
+          px: 0 
+        }}
+      >
         {children}
       </Container>
     </Box>

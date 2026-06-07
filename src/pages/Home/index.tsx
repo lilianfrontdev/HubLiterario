@@ -1,5 +1,4 @@
-import { Container, Grid, Typography, Box, Chip, Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Container, Grid, Typography, Box, Chip } from "@mui/material";
 import StatCard from "./components/StatCard";
 import InfoCard from "./components/InfoCard";
 import PhaseRow from "./components/PhaseRow";
@@ -10,6 +9,9 @@ import mundo from "../../assets/mundo.png";
 import BannerPattern from "../../components/BannerPattern";
 import Title from "../../components/Title";
 import Subtitle from "../../components/Subtitle";
+import BannerTag from "../../components/BannerTag";
+import Text from "../../components/Text";
+import CustomButton from "./components/CustomButton";
 
 interface HomeProps {
   totalBooks?: number | string;
@@ -18,144 +20,69 @@ interface HomeProps {
 
 function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
   return (
-    <Box component="main">
+    <Box component="main" sx={{ width: "100%", overflowX: "hidden" }}>
+      
       <BannerPattern maxWidth="md">
-        <Container maxWidth="md">
-          <Typography
-            variant="body2"
-            sx={{
-              color: "#F0B84A",
-              fontWeight: 700,
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              mb: 2,
-              fontSize: { xs: 11, sm: 12 },
-            }}
-          >
-            PNLD Literário - Ensino Médio
-          </Typography>
+        <BannerTag align="center" variant="light">
+          PNLD Literário • Ensino Médio
+        </BannerTag>
+        <Title text="Toda leitura" highlightText="começa com um caminho." />
+        
+        <Typography
+          variant="body1"
+          sx={{
+            maxWidth: 600,
+            margin: "0 auto",
+            opacity: 0.9,
+            fontSize: { xs: 15, sm: 16 },
+            lineHeight: 1.6,
+            mb: 4,
+            px: { xs: 2, sm: 0 } 
+          }}
+        >
+          Um espaço onde os livros ganham contexto, e as palavras dos
+          estudantes ganham um lugar para existir.
+        </Typography>
 
-          <Title text="Toda leitura" highlightText="começa com um caminho." />
-
-          <Subtitle>
-            Um espaço onde os livros ganham contexto, e as palavras dos
-            estudantes ganham um lugar para existir.
-          </Subtitle>
-
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "column", sm: "row" },
-              justifyContent: "center",
-              gap: 2,
-              mt: { xs: 4, sm: 5 },
-              px: { xs: 3, sm: 0 },
-            }}
-          >
-            <Button
-              component={Link}
-              to="/obras"
-              variant="contained"
-              sx={{
-                bgcolor: "secondary.main",
-                color: "white",
-                textTransform: "none",
-                fontFamily: '"DM Sans", sans-serif',
-                fontWeight: 500,
-                px: 4,
-                py: 1.2,
-                borderRadius: 1.5,
-                fontSize: 15,
-                width: { xs: "100%", sm: "auto" },
-                "&:hover": {
-                  bgcolor: "secondary.light",
-                },
-              }}
-            >
-              Explorar o acervo
-            </Button>
-
-            <Button
-              component={Link}
-              to="/login"
-              variant="outlined"
-              sx={{
-                color: "white",
-                borderColor: "white",
-                textTransform: "none",
-                fontFamily: '"DM Sans", sans-serif',
-                fontWeight: 500,
-                px: 4,
-                py: 1.2,
-                borderRadius: 1.5,
-                fontSize: 15,
-                width: { xs: "100%", sm: "auto" },
-                "&:hover": {
-                  borderColor: "#FAF6EE",
-                  bgcolor: "rgba(250, 246, 238, 0.08)",
-                },
-              }}
-            >
-              Sou Professor
-            </Button>
-          </Box>
-        </Container>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            justifyContent: "center",
+            gap: 2,
+            mt: { xs: 4, sm: 5 },
+            px: { xs: 4, sm: 0 }, 
+          }}
+        >
+          <CustomButton to="/obras">Explorar o acervo</CustomButton>
+          <CustomButton to="/login" variant="outlined">Sou Professor</CustomButton>
+        </Box>
       </BannerPattern>
 
-      <Container maxWidth="lg" sx={{ py: { xs: "4rem", md: "6rem" }, px: 3 }}>
-        <Grid container spacing={4} alignItems="center">
+      <Container maxWidth="lg" sx={{ py: { xs: "4rem", md: "6rem" }, px: { xs: 2, sm: 3 } }}>
+        <Grid container spacing={{ xs: 3, md: 4 }} alignItems="center">
           <Grid size={{ xs: 12, md: 7 }}>
-            <Typography
-              variant="body2"
-              color="secondary"
-              sx={{
-                fontWeight: 700,
-                mb: 1.5,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                fontSize: 12,
-              }}
-            >
-              Sobre o Projeto
-            </Typography>
-            <Typography
-              variant="h2"
-              component="h2"
-              color="primary"
-              sx={{
-                mb: 3,
-                fontSize: { xs: 28, md: 34 },
-                lineHeight: 1.3,
-                fontWeight: 600,
-              }}
-            >
+            <BannerTag variant="dark">Sobre o Projeto</BannerTag>
+            <Subtitle align="left" variant="dark">
               Um hub pensado para quem lê e para quem ensina a ler
-            </Typography>
-            <Typography
-              variant="body1"
-              color="primary"
-              sx={{ mb: 2, lineHeight: 1.8, fontSize: 15 }}
-            >
+            </Subtitle>
+            <Text>
               O <strong>Hub Literário</strong> nasceu como proposta pedagógica
               para o PNLD Literário, com foco nas obras afro-brasileiras e
               africanas do Ensino Médio. A ideia é simples: aproximar o leitor
               do mundo do livro antes mesmo de abrir a primeira página, e dar
               voz às reflexões dos estudantes durante toda a leitura.
-            </Typography>
-            <Typography
-              variant="body1"
-              color="primary"
-              sx={{ lineHeight: 1.8, fontSize: 15 }}
-            >
+            </Text>
+            <Text>
               Professores organizam os livros, definem as senhas de acesso e
               acompanham as contribuições das turmas. Alunos exploram contextos
-              históricos, geográficos e culturais, e compartilham o que cada
+              historísticos, geográficos e culturais, e compartilham o que cada
               capítulo despertou neles.
-            </Typography>
+            </Text>
           </Grid>
 
           <Grid size={{ xs: 12, md: 5 }}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: { xs: 2, md: 0 } }}>
               <StatCard
                 n={totalBooks}
                 label="obras no acervo"
@@ -183,35 +110,17 @@ function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
         sx={{
           bgcolor: "background.paper",
           py: { xs: "4rem", md: "5rem" },
-          px: 2,
+          px: { xs: 2, sm: 3 },
         }}
       >
         <Container maxWidth="lg">
-          <Typography
-            variant="body2"
-            color="secondary"
-            align="center"
-            sx={{
-              fontWeight: 700,
-              mb: 1.5,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              fontSize: 12,
-            }}
-          >
+          <BannerTag align="center" variant="dark">
             Contexto
-          </Typography>
-          <Typography
-            variant="h2"
-            component="h2"
-            color="primary"
-            align="center"
-            sx={{ mb: 6, fontSize: { xs: 26, md: 32 }, fontWeight: 600 }}
-          >
+          </BannerTag>
+          <Subtitle align="center" variant="dark">
             O que é o PNLD Literário?
-          </Typography>
-
-          <Grid container={true} spacing={3}>
+          </Subtitle>
+          <Grid container spacing={3}>
             <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <InfoCard
                 title="Um programa nacional"
@@ -240,30 +149,13 @@ function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
         </Container>
       </Box>
 
-      <Container maxWidth="md" sx={{ py: { xs: "4rem", md: "6rem" }, px: 2 }}>
-        <Typography
-          variant="body2"
-          color="secondary"
-          align="center"
-          sx={{
-            fontWeight: 700,
-            mb: 1.5,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            fontSize: 12,
-          }}
-        >
+      <Container maxWidth="md" sx={{ py: { xs: "4rem", md: "6rem" }, px: { xs: 2, sm: 3 } }}>
+        <BannerTag align="center" variant="dark">
           Como funciona
-        </Typography>
-        <Typography
-          variant="h2"
-          component="h2"
-          color="primary"
-          align="center"
-          sx={{ mb: 6, fontSize: { xs: 26, md: 32 }, fontWeight: 600 }}
-        >
+        </BannerTag>
+        <Subtitle align="center" variant="dark">
           Três fases de leitura
-        </Typography>
+        </Subtitle>
 
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
           <PhaseRow
@@ -292,29 +184,20 @@ function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
           bgcolor: "primary.main",
           color: "primary.contrastText",
           py: "4rem",
-          px: 3,
+          px: { xs: 2, sm: 3 },
         }}
       >
         <Container maxWidth="sm" sx={{ textAlign: "center" }}>
-          <Typography
-            variant="body2"
-            sx={{
-              color: "#F0B84A",
-              letterSpacing: "0.15em",
-              mb: 2,
-              fontWeight: 700,
-              textTransform: "uppercase",
-              fontSize: 11,
-            }}
-          >
+          <BannerTag align="center" variant="light">
             Créditos
-          </Typography>
+          </BannerTag>
+
           <Typography
             variant="h2"
             component="h2"
             sx={{
               color: "primary.contrastText",
-              fontSize: { xs: 24, md: 28 },
+              fontSize: { xs: 22, md: 28 }, 
               fontWeight: 400,
               fontStyle: "italic",
               mb: 3,
@@ -323,17 +206,14 @@ function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
           >
             "Cada sonho contado é uma raiz que se firma."
           </Typography>
-          <Typography
-            variant="body2"
-            sx={{ mb: 4, lineHeight: 1.8, opacity: 0.8, fontSize: 14 }}
-          >
+          <Text align="center" variant="light">
             Projeto desenvolvido por Lilian Borsoi, estudante de Ciência da
             Computação - FSG, como proposta pedagógica para o PNLD Literário,
             voltado ao Ensino Médio. Inspirado na obra{" "}
             <em>"No Caminho Contaremos Nossos Sonhos"</em> de Severino
             Rodrigues. Concebido para valorizar a literatura afro-brasileira e
             africana como ferramenta de formação humana e identitária.
-          </Typography>
+          </Text>
 
           <Box
             sx={{
@@ -341,6 +221,7 @@ function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
               flexWrap: "wrap",
               justifyContent: "center",
               gap: 1.5,
+              mt: 3 
             }}
           >
             {[
@@ -358,7 +239,7 @@ function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
                   color: "#F0B84A",
                   borderColor: "rgba(240, 184, 74, 0.3)",
                   fontFamily: '"DM Sans", sans-serif',
-                  fontSize: 12,
+                  fontSize: 11, 
                 }}
               />
             ))}
