@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { Outlet, Link } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
+import MainFooter from "./MainFooter";
 
 function MainHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -166,6 +167,7 @@ function MainHeader() {
       <Box component="main" sx={{ width: "100%", boxSizing: "border-box" }}>
         <Outlet />
       </Box>
+      <MainFooter/>
     </Box>
   );
 }
