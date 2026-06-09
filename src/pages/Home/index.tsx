@@ -60,7 +60,7 @@ function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
       </BannerPattern>
 
       <Container maxWidth="lg" sx={{ py: { xs: "4rem", md: "6rem" }, px: { xs: 2, sm: 3 } }}>
-        <Grid container spacing={{ xs: 3, md: 4 }} alignItems="center">
+        <Grid container spacing={{ xs: 3, md: 4 }}>
           <Grid size={{ xs: 12, md: 7 }}>
             <BannerTag variant="dark">Sobre o Projeto</BannerTag>
             <Subtitle align="left" variant="dark">

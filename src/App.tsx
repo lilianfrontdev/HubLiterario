@@ -3,6 +3,7 @@ import { ThemeProvider } from "@mui/material";
 import theme from "./theme";
 import Home from "./pages/Home";
 import MainHeader from "./components/MainHeader";
+import CollectionPage from "./pages/Collection";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Routes>
           <Route element={<MainHeader/>}>
             <Route path="/" element={<Home />} />
+            <Route path="/obras" element={<CollectionPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
