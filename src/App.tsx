@@ -4,6 +4,7 @@ import theme from "./theme";
 import Home from "./pages/Home";
 import MainHeader from "./components/MainHeader";
 import CollectionPage from "./pages/Collection";
+import BookDetail from "./pages/BookDetail";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route element={<MainHeader/>}>
             <Route path="/" element={<Home />} />
             <Route path="/obras" element={<CollectionPage />} />
+            <Route path="/obras/:id" element={<BookDetail />} />
           </Route>
         </Routes>
       </BrowserRouter>
