@@ -18,14 +18,12 @@ function ReflectionForm({ bookTitle, onCancel, onSuccess }: ReflectionFormProps)
   const [rating, setRating] = useState<number | null>(0);
   const [openAlert, setOpenAlert] = useState(false);
 
-  // Estados para capturar os dados do formulário do estudante
   const [studentName, setStudentName] = useState("");
   const [studentGrade, setStudentGrade] = useState("");
   const [selectedChapter, setSelectedChapter] = useState("");
   const [reflectionText, setReflectionText] = useState("");
 
   const handleConfirmPassword = () => {
-    // Validação da senha do professor
     if (password === "1234") { 
       setStep('form');
     } else {
@@ -36,14 +34,13 @@ function ReflectionForm({ bookTitle, onCancel, onSuccess }: ReflectionFormProps)
   const handlePublish = () => {
     setOpenAlert(true);
     setTimeout(() => {
-      onSuccess(); // Retorna para a listagem de reflexões após 2 segundos
+      onSuccess(); 
     }, 2000);
   };
 
   return (
     <Box sx={{ width: "100%", mt: 2, boxSizing: "border-box" }}>
       
-      {/* PASSO 1: ACESSO POR SENHA */}
       {step === 'password' && (
         <Card elevation={0} sx={{ bgcolor: "#FAF6EE", borderRadius: 4, border: "1px solid", borderColor: "#EAE2D5" }}>
           <CardContent sx={{ p: { xs: 3, md: 5 } }}>
@@ -54,7 +51,6 @@ function ReflectionForm({ bookTitle, onCancel, onSuccess }: ReflectionFormProps)
               </Typography>
             </Box>
             
-            {/* CORREÇÃO AQUI: Usando a prop bookTitle para personalizar a mensagem do aluno e limpar o erro do TS! */}
             <Typography sx={{ color: "text.secondary", mb: 4, fontSize: 15, lineHeight: 1.6 }}>
               Seu professor forneceu uma senha específica para a obra <strong>"{bookTitle}"</strong>. Insira-a para liberar a publicação da sua reflexão.
             </Typography>
@@ -96,7 +92,6 @@ function ReflectionForm({ bookTitle, onCancel, onSuccess }: ReflectionFormProps)
         </Card>
       )}
 
-      {/* PASSO 2: FORMULÁRIO DE REFLEXÃO */}
       {step === 'form' && (
         <Card elevation={0} sx={{ bgcolor: "background.paper", borderRadius: 4, border: "1px solid", borderColor: "divider" }}>
           <CardContent sx={{ p: { xs: 3, md: 5 } }}>
@@ -197,7 +192,6 @@ function ReflectionForm({ bookTitle, onCancel, onSuccess }: ReflectionFormProps)
         </Card>
       )}
 
-      {/* COMPONENTE ALERT DE SUCESSO (SNACKBAR) */}
       <Snackbar 
         open={openAlert} 
         autoHideDuration={4000} 

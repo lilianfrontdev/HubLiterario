@@ -2,7 +2,7 @@ import { Typography, Box } from "@mui/material";
 
 interface TitleProps {
   text: string;
-  highlightText: string;
+  highlightText?: string;
 }
 
 function Title({ text, highlightText }: TitleProps) {
