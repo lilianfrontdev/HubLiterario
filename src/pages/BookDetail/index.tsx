@@ -16,9 +16,11 @@ import BannerPattern from "../../components/BannerPattern";
 import InfoCard from "../Home/components/InfoCard";
 import { ChapterItem } from "./components/ChapterItem";
 import ReflectionCard from "./components/ReflectionCard";
+import ReflectionForm from "./components/ReflectionForm";
 
 function BookDetail() {
   const [tabValue, setTabValue] = useState(0);
+  const [isPublishing, setIsPublishing] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -216,51 +218,49 @@ function BookDetail() {
       )}
 
       {tabValue === 2 && (
-        <Box sx={{ maxWidth: 900, mx: "auto" }}>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mb: 4,
-              flexWrap: "wrap",
-              gap: 2,
-            }}
-          >
-            <Box sx={{ display: "flex", gap: 1, overflowX: "auto", pb: 1 }}>
-              {["Todos", "Parte I", "Parte II", "Parte III"].map((f, i) => (
-                <Chip
-                  key={f}
-                  label={f}
-                  clickable
-                  variant={i === 0 ? "filled" : "outlined"}
+        <Box sx={{ width: "100%" }}>
+          {!isPublishing ? (
+            <>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  mb: 4,
+                  flexWrap: "wrap",
+                  gap: 2,
+                }}
+              >
+                <Box sx={{ display: "flex", gap: 1 }}></Box>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => setIsPublishing(true)}
                   sx={{
-                    bgcolor: i === 0 ? "secondary.main" : "transparent",
-                    color: i === 0 ? "white" : "#5C3D2E",
-                    fontWeight: i === 0 ? 600 : 500,
-                    fontFamily: '"DM Sans", sans-serif',
+                    borderRadius: 2,
+                    textTransform: "none",
+                    fontWeight: 600,
                   }}
-                />
-              ))}
-            </Box>
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{ borderRadius: 2, textTransform: "none", fontWeight: 600 }}
-            >
-              + Publicar Reflexão
-            </Button>
-          </Box>
-
-          <ReflectionCard
-            name="Maria Clara"
-            grade="3ºA"
-            date="2025-05-10"
-            stars={5}
-            chapterTag="Parte I: O Horizonte"
-            text="Quando Aminata olha para o mar pela primeira vez no Brasil, senti que ela estava olhando para um espelho — ela via o mesmo oceano que seus antepassados cruzaram, mas agora ela escolhia estar aqui."
-            likes={14}
-          />
+                >
+                  + Publicar Reflexão
+                </Button>
+              </Box>
+              <ReflectionCard
+                name="Maria Clara"
+                grade="3ºA"
+                date="2025-05-10"
+                stars={5}
+                chapterTag="Parte I: O Horizonte"
+                text="Quando Aminata olha para o mar pela primeira vez no Brasil, senti que ela estava olhando para um espelho — ela via o mesmo oceano que seus antepassados cruzaram, mas agora ela escolhia estar aqui. Isso me fez pensar sobre o que significa pertencer a um lugar."
+                likes={14}
+              />{" "}
+            </>
+          ) : (
+            <ReflectionForm
+              bookTitle="No Caminho Contaremos Nossos Sonhos"
+              onCancel={() => setIsPublishing(false)}
+              onSuccess={() => setIsPublishing(false)}
+            />
+          )}
         </Box>
       )}
     </Container>
