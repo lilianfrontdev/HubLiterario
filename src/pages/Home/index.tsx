@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"; // Injeção dos hooks essenciais
 import { Container, Grid, Typography, Box, Chip } from "@mui/material";
 import StatCard from "./components/StatCard";
 import InfoCard from "./components/InfoCard";
@@ -12,22 +13,54 @@ import Subtitle from "../../components/Subtitle";
 import BannerTag from "../../components/BannerTag";
 import Text from "../../components/Text";
 import CustomButton from "./components/CustomButton";
+import { bookService } from "../../services/book";
+import { reflectionService } from "../../services/reflection";
 
 interface HomeProps {
   totalBooks?: number | string;
   totalReflections?: number | string;
 }
 
-function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
+function Home({
+  totalBooks: propBooks,
+  totalReflections: propReflections,
+}: HomeProps) {
+  const [booksCount, setBooksCount] = useState<number | string>(propBooks ?? 0);
+  const [reflectionsCount, setReflectionsCount] = useState<number | string>(
+    propReflections ?? 0,
+  );
+
+  useEffect(() => {
+    if (propBooks !== undefined && propReflections !== undefined) return;
+
+    async function fetchLiveMetrics() {
+      try {
+        const [books, reflections] = await Promise.all([
+          bookService.getAllBooks(),
+          reflectionService.getAllReflections(),
+        ]);
+
+        setBooksCount(books.length);
+        setReflectionsCount(reflections.length);
+      } catch (error) {
+        console.error(
+          "Erro ao sincronizar as métricas do banco na Home:",
+          error,
+        );
+      }
+    }
+
+    fetchLiveMetrics();
+  }, [propBooks, propReflections]);
+
   return (
     <Box component="main" sx={{ width: "100%", overflowX: "hidden" }}>
-      
       <BannerPattern maxWidth="md">
         <BannerTag align="center" variant="light">
           PNLD Literário • Ensino Médio
         </BannerTag>
         <Title text="Toda leitura" highlightText="começa com um caminho." />
-        
+
         <Typography
           variant="body1"
           sx={{
@@ -37,11 +70,11 @@ function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
             fontSize: { xs: 15, sm: 16 },
             lineHeight: 1.6,
             mb: 4,
-            px: { xs: 2, sm: 0 } 
+            px: { xs: 2, sm: 0 },
           }}
         >
-          Um espaço onde os livros ganham contexto, e as palavras dos
-          estudantes ganham um lugar para existir.
+          Um espaço onde os livros ganham contexto, e as palavras dos estudantes
+          ganham um lugar para existir.
         </Typography>
 
         <Box
@@ -51,15 +84,20 @@ function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
             justifyContent: "center",
             gap: 2,
             mt: { xs: 4, sm: 5 },
-            px: { xs: 4, sm: 0 }, 
+            px: { xs: 4, sm: 0 },
           }}
         >
           <CustomButton to="/obras">Explorar o acervo</CustomButton>
-          <CustomButton to="/login" variant="outlined">Sou Professor</CustomButton>
+          <CustomButton to="/login" variant="outlined">
+            Sou Professor
+          </CustomButton>
         </Box>
       </BannerPattern>
 
-      <Container maxWidth="lg" sx={{ py: { xs: "4rem", md: "6rem" }, px: { xs: 2, sm: 3 } }}>
+      <Container
+        maxWidth="lg"
+        sx={{ py: { xs: "4rem", md: "6rem" }, px: { xs: 2, sm: 3 } }}
+      >
         <Grid container spacing={{ xs: 3, md: 4 }}>
           <Grid size={{ xs: 12, md: 7 }}>
             <BannerTag variant="dark">Sobre o Projeto</BannerTag>
@@ -76,21 +114,28 @@ function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
             <Text>
               Professores organizam os livros, definem as senhas de acesso e
               acompanham as contribuições das turmas. Alunos exploram contextos
-              historísticos, geográficos e culturais, e compartilham o que cada
+              históricos, geográficos e culturais, e compartilham o que cada
               capítulo despertou neles.
             </Text>
           </Grid>
 
           <Grid size={{ xs: 12, md: 5 }}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: { xs: 2, md: 0 } }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                mt: { xs: 2, md: 0 },
+              }}
+            >
               <StatCard
-                n={totalBooks}
+                n={booksCount}
                 label="obras no acervo"
                 icon={acervo}
                 iconColor="secondary.main"
               />
               <StatCard
-                n={totalReflections}
+                n={reflectionsCount}
                 label="reflexões publicadas"
                 icon={reflexao}
                 iconColor="text.secondary"
@@ -149,7 +194,10 @@ function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
         </Container>
       </Box>
 
-      <Container maxWidth="md" sx={{ py: { xs: "4rem", md: "6rem" }, px: { xs: 2, sm: 3 } }}>
+      <Container
+        maxWidth="md"
+        sx={{ py: { xs: "4rem", md: "6rem" }, px: { xs: 2, sm: 3 } }}
+      >
         <BannerTag align="center" variant="dark">
           Como funciona
         </BannerTag>
@@ -197,7 +245,7 @@ function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
             component="h2"
             sx={{
               color: "primary.contrastText",
-              fontSize: { xs: 22, md: 28 }, 
+              fontSize: { xs: 22, md: 28 },
               fontWeight: 400,
               fontStyle: "italic",
               mb: 3,
@@ -221,7 +269,7 @@ function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
               flexWrap: "wrap",
               justifyContent: "center",
               gap: 1.5,
-              mt: 3 
+              mt: 3,
             }}
           >
             {[
@@ -239,7 +287,7 @@ function Home({ totalBooks = 0, totalReflections = 0 }: HomeProps) {
                   color: "#F0B84A",
                   borderColor: "rgba(240, 184, 74, 0.3)",
                   fontFamily: '"DM Sans", sans-serif',
-                  fontSize: 11, 
+                  fontSize: 11,
                 }}
               />
             ))}

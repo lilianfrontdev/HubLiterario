@@ -1,7 +1,7 @@
 import type { Reflection } from "../types/api";
 import { api } from "./api";
 
-export const reflection = {
+export const reflectionService = {
   getAllReflections: async (): Promise<Reflection[]> => {
     const response = await api.get<Reflection[]>("/reflections");
     return response.data;

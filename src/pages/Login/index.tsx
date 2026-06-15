@@ -19,14 +19,16 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
     if (email === "professor@escola.com" && password === "123456") {
-      navigate("/professor/dashboard");
+      navigate("/professor");
     } else {
-      alert(
+      setError(
         "Credenciais incorretas! Use professor@escola.com e 123456 para testar.",
       );
     }
@@ -53,7 +55,7 @@ function Login() {
             textTransform: "none",
             mb: 3,
             fontWeight: 500,
-            "&:hover": { color: "primary.main" },
+            "&:hover": { color: "primary.main", bgcolor: "transparent" },
           }}
         >
           Voltar para o início
@@ -115,7 +117,7 @@ function Login() {
                 />
               </Box>
 
-              <Box sx={{ mb: 4 }}>
+              <Box sx={{ mb: 3 }}>
                 <Typography
                   variant="caption"
                   sx={{
@@ -156,6 +158,16 @@ function Login() {
                   }}
                 />
               </Box>
+
+              {error && (
+                <Typography
+                  variant="body2"
+                  color="error"
+                  sx={{ mb: 3, fontWeight: 500, textAlign: "center" }}
+                >
+                  {error}
+                </Typography>
+              )}
 
               <Button
                 type="submit"

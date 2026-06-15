@@ -1,8 +1,10 @@
 import { Box, Typography, Button, Paper, Stack } from "@mui/material";
 import KeyIcon from "@mui/icons-material/Key";
 import StarIcon from "@mui/icons-material/Star";
+import { useNavigate } from "react-router-dom";
 
 interface TeacherBookProps {
+  id: string; 
   title: string;
   author: string;
   year: number;
@@ -12,13 +14,20 @@ interface TeacherBookProps {
 }
 
 function TeacherBook({
+  id,
   title,
   author,
   year,
-  reflections,
-  rating,
+  reflections = 0,
+  rating = 0,
   password,
 }: TeacherBookProps) {
+  const navigate = useNavigate();
+
+  const handleNavigateToHub = () => {
+    navigate(`/obras/${id}`);
+  };
+
   return (
     <Paper
       elevation={0}
@@ -61,15 +70,20 @@ function TeacherBook({
               flexDirection: "row",
               alignItems: "center",
               flexWrap: "wrap",
-              gap: 1.5, 
+              gap: 1.5,
               rowGap: 1,
             }}
           >
             <Typography variant="body2" color="text.secondary">
               {author} • {year}
             </Typography>
+
             <Typography variant="body2" color="text.secondary">
-              {reflections} reflexões
+              {reflections === 0
+                ? "0 reflexões"
+                : reflections === 1
+                  ? "1 reflexão"
+                  : `${reflections} reflexões`}
             </Typography>
 
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
@@ -78,7 +92,7 @@ function TeacherBook({
                 variant="body2"
                 sx={{ fontWeight: 700, color: "#D4922A" }}
               >
-                {rating}
+                {Number(rating).toFixed(1)}
               </Typography>
             </Box>
 
@@ -107,14 +121,15 @@ function TeacherBook({
 
         <Button
           variant="outlined"
+          onClick={handleNavigateToHub}
           sx={{
             borderRadius: 2,
             textTransform: "none",
             borderColor: "divider",
             color: "text.secondary",
             px: 3,
-            whiteSpace: "nowrap", 
-            width: { xs: "100%", md: "auto" }, 
+            whiteSpace: "nowrap",
+            width: { xs: "100%", md: "auto" },
             "&:hover": { borderColor: "primary.main", color: "primary.main" },
           }}
         >

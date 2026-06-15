@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Box,
@@ -9,19 +9,78 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
 import BannerPattern from "../../components/BannerPattern";
 import InfoCard from "../Home/components/InfoCard";
 import { ChapterItem } from "./components/ChapterItem";
 import ReflectionCard from "./components/ReflectionCard";
 import ReflectionForm from "./components/ReflectionForm";
+import type { Book, Reflection } from "../../types/api";
+import { bookService } from "../../services/book";
+import { reflectionService } from "../../services/reflection";
 
 function BookDetail() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [tabValue, setTabValue] = useState(0);
   const [isPublishing, setIsPublishing] = useState(false);
-  const navigate = useNavigate();
+  const [book, setBook] = useState<Book | null>(null);
+  const [reflections, setReflections] = useState<Reflection[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadBookAndReflections() {
+      if (!id) return;
+      try {
+        setLoading(true);
+
+        const [fetchedBook, allReflections] = await Promise.all([
+          bookService.getBookById(id),
+          reflectionService.getAllReflections(),
+        ]);
+
+        setBook(fetchedBook);
+
+        const filteredReflections = allReflections.filter(
+          (ref) => ref["book-title"] === fetchedBook.title,
+        );
+        setReflections(filteredReflections);
+      } catch (error) {
+        console.error("Erro ao carregar detalhes da obra:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadBookAndReflections();
+  }, [id, isPublishing]);
+
+  if (loading) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 6 }}>
+        <Typography color="text.secondary">
+          Carregando detalhes do hub literário...
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (!book) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 6 }}>
+        <Typography color="error">Obra não encontrada no acervo.</Typography>
+        <Button onClick={() => navigate("/obras")} sx={{ mt: 2 }}>
+          Voltar ao acervo
+        </Button>
+      </Container>
+    );
+  }
+
+  const tagsArray = book.tags ? book.tags.split(",").map((t) => t.trim()) : [];
+  const chaptersArray = book.chapter
+    ? book.chapter.split("\n").filter((c) => c.trim() !== "")
+    : [];
 
   return (
     <Container
@@ -51,8 +110,18 @@ function BookDetail() {
               boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
             }}
           >
-            <BannerPattern>
-              <Box sx={{ py: { xs: 6, md: 10 }, px: 2 }}>
+            <BannerPattern maxWidth={false}>
+              <Box
+                sx={{
+                  py: { xs: 6, md: 10 },
+                  px: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  height: "100%",
+                  boxSizing: "border-box",
+                }}
+              >
                 <Typography
                   variant="h5"
                   sx={{
@@ -60,12 +129,20 @@ function BookDetail() {
                     fontFamily: '"Cormorant Garamond", serif',
                     fontWeight: 600,
                     mb: 1,
+                    textAlign: "center",
                   }}
                 >
-                  No Caminho Contaremos Nossos Sonhos
+                  {book.title}
                 </Typography>
-                <Typography sx={{ color: "white", opacity: 0.8, fontSize: 14 }}>
-                  Severino Rodrigues
+                <Typography
+                  sx={{
+                    color: "white",
+                    opacity: 0.8,
+                    fontSize: 14,
+                    textAlign: "center",
+                  }}
+                >
+                  {book.author}
                 </Typography>
                 <Box
                   sx={{
@@ -83,7 +160,7 @@ function BookDetail() {
 
         <Grid size={{ xs: 12, md: 8 }}>
           <Box sx={{ display: "flex", gap: 1, mb: 3, flexWrap: "wrap" }}>
-            {["Refúgio", "Identidade", "Cultura Afro", "Migração"].map((t) => (
+            {tagsArray.map((t) => (
               <Chip
                 key={t}
                 label={t}
@@ -108,21 +185,21 @@ function BookDetail() {
               mb: 2,
             }}
           >
-            No Caminho Contaremos Nossos Sonhos
+            {book.title}
           </Typography>
 
           <Typography
             variant="h6"
             sx={{ color: "secondary.main", mb: 3, fontWeight: 500 }}
           >
-            Severino Rodrigues • 2022
+            {book.author} • {book.year}
           </Typography>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 4 }}>
             <Typography
               sx={{ color: "#D4922A", fontWeight: 700, fontSize: 20 }}
             >
-              ★ 4.7
+              ★ {book.rating > 0 ? book.rating.toFixed(1) : "Novo"}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               média das avaliações
@@ -139,9 +216,7 @@ function BookDetail() {
               maxWidth: 700,
             }}
           >
-            Um romance que acompanha jovens refugiados africanos em sua jornada
-            pelo Brasil, entrelaçando identidade, pertencimento e a força dos
-            sonhos como resistência.
+            {book.description || "Nenhuma sinopse disponível para este livro."}
           </Typography>
         </Grid>
       </Grid>
@@ -164,7 +239,7 @@ function BookDetail() {
             sx={{ textTransform: "none", fontWeight: 600, px: 4 }}
           />
           <Tab
-            label="Reflexões (3)"
+            label={`Reflexões (${reflections.length})`} // Contador dinâmico na aba
             sx={{ textTransform: "none", fontWeight: 600, px: 4 }}
           />
         </Tabs>
@@ -175,19 +250,27 @@ function BookDetail() {
           <Grid size={{ xs: 12, md: 6 }}>
             <InfoCard
               title="Contexto Histórico"
-              text="A obra se passa em um contexto de crescente migração africana para o Brasil, especialmente após conflitos na África Central e Ocidental nos anos 2010."
+              text={
+                book["historical-context"] ||
+                "Contexto histórico não preenchido."
+              }
             />
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <InfoCard
               title="Contexto Geográfico"
-              text="A narrativa percorre desde Guiné-Bissau e Senegal até as cidades brasileiras de São Paulo e Porto Alegre."
+              text={
+                book["geographic-context"] ||
+                "Contexto geográfico não preenchido."
+              }
             />
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <InfoCard
               title="Contexto Cultural"
-              text="Aborda rituais, línguas e tradições de povos Mandinga e Wolof, conectando-os à diáspora afro-brasileira."
+              text={
+                book["cultural-context"] || "Contexto cultural não preenchido."
+              }
             />
           </Grid>
         </Grid>
@@ -195,25 +278,38 @@ function BookDetail() {
 
       {tabValue === 1 && (
         <Box sx={{ maxWidth: 900, mx: "auto" }}>
-          <ChapterItem
-            num={1}
-            title="Parte I: O Horizonte"
-            rating={5.0}
-            reflections={1}
-          />
-          <ChapterItem
-            num={2}
-            title="Parte II: As Estradas"
-            rating={4.0}
-            reflections={1}
-          />
-          <ChapterItem
-            num={3}
-            title="Parte III: As Vozes"
-            rating={5.0}
-            reflections={1}
-          />
-          <ChapterItem num={4} title="Parte IV: Os Sonhos" reflections={0} />
+          {chaptersArray.length > 0 ? (
+            chaptersArray.map((chapterName, index) => {
+              const chapterReflections = reflections.filter(
+                (r) => r["chapter-tag"] === chapterName,
+              );
+
+              return (
+                <ChapterItem
+                  key={index}
+                  num={index + 1}
+                  title={chapterName}
+                  reflections={chapterReflections.length}
+                  rating={
+                    chapterReflections.length > 0
+                      ? Number(
+                          (
+                            chapterReflections.reduce(
+                              (acc, r) => acc + r.stars,
+                              0,
+                            ) / chapterReflections.length
+                          ).toFixed(1),
+                        )
+                      : undefined
+                  }
+                />
+              );
+            })
+          ) : (
+            <Typography color="text.secondary">
+              Nenhum capítulo cadastrado.
+            </Typography>
+          )}
         </Box>
       )}
 
@@ -244,19 +340,33 @@ function BookDetail() {
                   + Publicar Reflexão
                 </Button>
               </Box>
-              <ReflectionCard
-                name="Maria Clara"
-                grade="3ºA"
-                date="2025-05-10"
-                stars={5}
-                chapterTag="Parte I: O Horizonte"
-                text="Quando Aminata olha para o mar pela primeira vez no Brasil, senti que ela estava olhando para um espelho — ela via o mesmo oceano que seus antepassados cruzaram, mas agora ela escolhia estar aqui. Isso me fez pensar sobre o que significa pertencer a um lugar."
-                likes={14}
-              />{" "}
+
+              {reflections.length > 0 ? (
+                reflections.map((ref) => (
+                  <ReflectionCard
+                    key={ref.id}
+                    id={ref.id}
+                    name={ref.name}
+                    grade={ref.grade}
+                    date={ref.date}
+                    stars={ref.stars}
+                    chapterTag={ref["chapter-tag"]}
+                    text={ref.text}
+                    likes={ref.likes || 0}
+                  />
+                ))
+              ) : (
+                <Typography
+                  color="text.secondary"
+                  sx={{ py: 4, textAlign: "center" }}
+                >
+                  Seja o primeiro a compartilhar uma reflexão sobre esta obra!
+                </Typography>
+              )}
             </>
           ) : (
             <ReflectionForm
-              bookTitle="No Caminho Contaremos Nossos Sonhos"
+              bookTitle={book.title}
               onCancel={() => setIsPublishing(false)}
               onSuccess={() => setIsPublishing(false)}
             />
