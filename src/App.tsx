@@ -17,9 +17,9 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/obras" element={<CollectionPage />} />
             <Route path="/obras/:id" element={<BookDetail />} />
-            <Route path="/login" element={<Login />} />
             <Route path="/professor/dashboard" element={<TeacherDashboard />} />
           </Route>
+          <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

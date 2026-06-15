@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Box, Button, Container, Grid, Typography, Paper } from "@mui/material";
 import BannerPattern from "../../components/BannerPattern";
 import TeacherBook from "./components/TeacherBook";
 import Text from "../../components/Text";
 import Title from "../../components/Title";
+import BookForm from "./components/BookForm";
 
 interface DashboardStatCardProps {
   value: string | number;
@@ -58,6 +60,14 @@ function DashboardStatCard({ value, label }: DashboardStatCardProps) {
 }
 
 function TeacherDashboard() {
+  const [isCreating, setIsCreating] = useState(false);
+
+  const handleSaveBook = (bookData: any) => {
+    console.log("Objeto pronto para o MockAPI:", bookData);
+    // Aqui você fará o api.post('/books', bookData) posteriormente
+    setIsCreating(false);
+  };
+
   return (
     <Box
       sx={{
@@ -90,26 +100,29 @@ function TeacherDashboard() {
                 </Text>
               </Box>
 
-              <Button
-                variant="contained"
-                sx={{
-                  bgcolor: "#BC5A33",
-                  color: "white",
-                  borderRadius: 2.5,
-                  px: 4,
-                  py: 1.5,
-                  fontWeight: 600,
-                  textTransform: "none",
-                  fontSize: 15,
-                  fontFamily: '"DM Sans", sans-serif',
-                  boxShadow: "none",
-                  whiteSpace: "nowrap",
-                  width: { xs: "100%", sm: "auto" },
-                  "&:hover": { bgcolor: "#A04625", boxShadow: "none" },
-                }}
-              >
-                + Cadastrar Obra
-              </Button>
+              {!isCreating && (
+                <Button
+                  variant="contained"
+                  onClick={() => setIsCreating(true)} 
+                  sx={{
+                    bgcolor: "#BC5A33",
+                    color: "white",
+                    borderRadius: 2.5,
+                    px: 4,
+                    py: 1.5,
+                    fontWeight: 600,
+                    textTransform: "none",
+                    fontSize: 15,
+                    fontFamily: '"DM Sans", sans-serif',
+                    boxShadow: "none",
+                    whiteSpace: "nowrap",
+                    width: { xs: "100%", sm: "auto" },
+                    "&:hover": { bgcolor: "#A04625", boxShadow: "none" },
+                  }}
+                >
+                  + Cadastrar Obra
+                </Button>
+              )}
             </Box>
           </Container>
         </BannerPattern>
@@ -125,28 +138,39 @@ function TeacherDashboard() {
           zIndex: 3,
         }}
       >
-        <Grid container spacing={3} sx={{ mb: 5 }}>
-          <Grid size={{ xs: 12, sm: 4 }}>
-            <DashboardStatCard value="1" label="obras cadastradas" />
-          </Grid>
-          <Grid size={{ xs: 12, sm: 4 }}>
-            <DashboardStatCard value="4" label="reflexões totais" />
-          </Grid>
-          <Grid size={{ xs: 12, sm: 4 }}>
-            <DashboardStatCard value="4.8★" label="estrelas médias" />
-          </Grid>
-        </Grid>
+        {!isCreating ? (
+          <Box sx={{ width: "100%" }}>
+            <Grid container spacing={3} sx={{ mb: 5 }}>
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <DashboardStatCard value="1" label="obras cadastradas" />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <DashboardStatCard value="4" label="reflexões totais" />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <DashboardStatCard value="4.8★" label="estrelas médias" />
+              </Grid>
+            </Grid>
 
-        <Box sx={{ width: "100%", mt: 5 }}>
-          <TeacherBook
-            title="No Caminho Contaremos Nossos Sonhos"
-            author="Severino Rodrigues"
-            year={2022}
-            reflections={4}
-            rating={4.8}
-            password="sonhos2025"
-          />
-        </Box>
+            <Box sx={{ width: "100%", mt: 5 }}>
+              <TeacherBook
+                title="No Caminho Contaremos Nossos Sonhos"
+                author="Severino Rodrigues"
+                year={2022}
+                reflections={4}
+                rating={4.8}
+                password="sonhos2025"
+              />
+            </Box>
+          </Box>
+        ) : (
+          <Box sx={{ width: "100%", mt: 2 }}>
+            <BookForm
+              onCancel={() => setIsCreating(false)} 
+              onSave={handleSaveBook} 
+            />
+          </Box>
+        )}
       </Container>
     </Box>
   );
