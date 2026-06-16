@@ -6,7 +6,10 @@ import {
   Grid,
   Typography,
   CircularProgress,
+  Snackbar,
+  Alert,
 } from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import BannerPattern from "../../components/BannerPattern";
 import TeacherBook from "./components/TeacherBook";
 import Text from "../../components/Text";
@@ -23,6 +26,7 @@ function TeacherDashboard() {
   const [totalReflections, setTotalReflections] = useState(0);
   const [averageRating, setAverageRating] = useState<string | number>("0.0");
   const [loading, setLoading] = useState(true);
+  const [openAlert, setOpenAlert] = useState(false);
 
   const navigate = useNavigate();
 
@@ -93,6 +97,7 @@ function TeacherDashboard() {
 
       await bookService.createBook(payload);
       setIsCreating(false);
+      setOpenAlert(true);
     } catch (error) {
       alert("Houve um erro de comunicação ao salvar a nova obra no banco.");
       console.log(error);
@@ -113,7 +118,7 @@ function TeacherDashboard() {
         }}
       >
         <CircularProgress color="secondary" size={48} thickness={4.5} />
-         <Typography
+        <Typography
           variant="body1"
           color="text.secondary"
           sx={{ fontFamily: '"DM Sans", sans-serif', fontWeight: 500 }}
@@ -251,6 +256,28 @@ function TeacherDashboard() {
           </Box>
         )}
       </Container>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={4000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        sx={{ zIndex: 9999 }}
+      >
+        <Alert
+          severity="success"
+          icon={<FavoriteIcon sx={{ color: "white" }} />}
+          sx={{
+            bgcolor: "#11CAA0",
+            color: "white",
+            borderRadius: 3,
+            fontWeight: 600,
+            boxShadow: "0px 8px 24px rgba(17, 202, 160, 0.2)",
+            "& .MuiAlert-icon": { color: "white" },
+          }}
+        >
+          A nova obra foi cadastrada com sucesso e já está no acervo!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

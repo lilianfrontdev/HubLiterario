@@ -81,6 +81,27 @@ function MainHeader() {
           </ListItem>
         ))}
 
+        {isAuthenticated && (
+          <ListItem disablePadding>
+            <ListItemButton
+              component={Link}
+              to="/professor"
+              sx={{ textAlign: "center", justifyContent: "center", color: "#F0B84A" }}
+            >
+              <ListItemText
+                primary="Painel Geral"
+                sx={{
+                  "& .MuiListItemText-primary": {
+                    fontFamily: '"DM Sans", sans-serif',
+                    fontSize: 16,
+                    fontWeight: 500,
+                  },
+                }}
+              />
+            </ListItemButton>
+          </ListItem>
+        )}
+
         <ListItem disablePadding>
           {isAuthenticated ? (
             <ListItemButton
@@ -88,7 +109,8 @@ function MainHeader() {
               sx={{
                 textAlign: "center",
                 justifyContent: "center",
-                color: "#F0B84A",
+                color: "#FAF6EE",
+                opacity: 0.8
               }}
             >
               <ListItemText
@@ -195,6 +217,25 @@ function MainHeader() {
                 {item.label}
               </Button>
             ))}
+
+            {isAuthenticated && (
+              <Button
+                component={Link}
+                to="/professor"
+                sx={{
+                  color: "#F0B84A",
+                  fontFamily: '"DM Sans", sans-serif',
+                  textTransform: "none",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  "&:hover": {
+                    bgcolor: "primary.light",
+                  },
+                }}
+              >
+                Área do Professor
+              </Button>
+            )}
 
             {isAuthenticated ? (
               <Button
