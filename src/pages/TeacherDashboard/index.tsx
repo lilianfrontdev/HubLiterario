@@ -106,11 +106,20 @@ function TeacherDashboard() {
           bgcolor: "#FAF6EE",
           minHeight: "100vh",
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          gap: 2,
         }}
       >
-        <CircularProgress color="secondary" />
+        <CircularProgress color="secondary" size={48} thickness={4.5} />
+         <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ fontFamily: '"DM Sans", sans-serif', fontWeight: 500 }}
+        >
+          Carregando área do professor...
+        </Typography>
       </Box>
     );
   }

@@ -8,6 +8,7 @@ import {
   Chip,
   Tabs,
   Tab,
+  CircularProgress,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -58,11 +59,25 @@ function BookDetail() {
 
   if (loading) {
     return (
-      <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Typography color="text.secondary">
-          Carregando detalhes do hub literário...
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "80vh",
+          gap: 2,
+        }}
+      >
+        <CircularProgress color="secondary" size={48} thickness={4.5} />
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ fontFamily: '"DM Sans", sans-serif', fontWeight: 500 }}
+        >
+          Sincronizando diário de bordo...
         </Typography>
-      </Container>
+      </Box>
     );
   }
 
@@ -152,7 +167,7 @@ function BookDetail() {
                     mx: "auto",
                     mt: 3,
                   }}
-                />
+                ></Box>
               </Box>
             </BannerPattern>
           </Box>
@@ -239,7 +254,7 @@ function BookDetail() {
             sx={{ textTransform: "none", fontWeight: 600, px: 4 }}
           />
           <Tab
-            label={`Reflexões (${reflections.length})`} // Contador dinâmico na aba
+            label={`Reflexões (${reflections.length})`}
             sx={{ textTransform: "none", fontWeight: 600, px: 4 }}
           />
         </Tabs>

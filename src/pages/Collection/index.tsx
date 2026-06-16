@@ -1,5 +1,11 @@
-import { useState, useEffect } from "react"; // Adicionados os hooks essenciais
-import { Container, Grid, Box, Typography } from "@mui/material";
+import { useState, useEffect } from "react";
+import {
+  Container,
+  Grid,
+  Box,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import BannerPattern from "../../components/BannerPattern";
 import BannerTag from "../../components/BannerTag";
 import Title from "../../components/Title";
@@ -36,8 +42,23 @@ function CollectionPage() {
 
   if (loading) {
     return (
-      <Box sx={{ bgcolor: "#FAF6EE", minHeight: "100vh", p: 4 }}>
-        <Typography variant="h6" color="text.secondary">
+      <Box
+        sx={{
+          bgcolor: "#FAF6EE",
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 2,
+        }}
+      >
+        <CircularProgress color="secondary" size={48} thickness={4.5} />
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ fontFamily: '"DM Sans", sans-serif', fontWeight: 500 }}
+        >
           Carregando acervo literário...
         </Typography>
       </Box>
@@ -54,7 +75,7 @@ function CollectionPage() {
             sx={{ color: "white", opacity: 0.8, maxWidth: 600, mb: 4 }}
           >
             Navegue pelo acervo, aprofunde-se no contexto de cada obra e
-            comparthe suas reflexões com a senha do seu professor.
+            compartilhe suas reflexões com a senha do seu professor.
           </Typography>
 
           <Box sx={{ display: "flex", gap: 3 }}>
