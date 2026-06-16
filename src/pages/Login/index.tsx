@@ -25,12 +25,14 @@ function Login() {
     e.preventDefault();
     setError("");
 
-    if (email === "professor@escola.com" && password === "123456") {
+    const adminEmail = import.meta.env.VITE_TEACHER_EMAIL;
+    const adminPassword = import.meta.env.VITE_TEACHER_PASSWORD;
+
+    if (email === adminEmail && password === adminPassword) {
+      sessionStorage.setItem("isTeacherAuthenticated", "true");
       navigate("/professor");
     } else {
-      setError(
-        "Credenciais incorretas! Use professor@escola.com e 123456 para testar.",
-      );
+      setError("Credenciais incorretas! Verifique seus dados de acesso.");
     }
   };
 
@@ -105,7 +107,7 @@ function Login() {
                 <TextField
                   fullWidth
                   type="email"
-                  placeholder="exemplo@escola.com"
+                  placeholder="seu-email@escola.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required

@@ -12,22 +12,32 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import MainFooter from "./MainFooter";
 
 function MainHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const menuItems = [
-    { label: "Sobre o Projeto", path: "/" },
-    { label: "Acervo de Obras", path: "/obras" },
-    { label: "Entrar", path: "/login" },
-  ];
+  useLocation();
+
+  const isAuthenticated =
+    sessionStorage.getItem("isTeacherAuthenticated") === "true";
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("isTeacherAuthenticated");
+    navigate("/");
+  };
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  const baseMenuItems = [
+    { label: "Sobre o Projeto", path: "/" },
+    { label: "Acervo de Obras", path: "/obras" },
+  ];
 
   const drawer = (
     <Box
@@ -51,7 +61,7 @@ function MainHeader() {
         Hub Literário
       </Typography>
       <List>
-        {menuItems.map((item) => (
+        {baseMenuItems.map((item) => (
           <ListItem key={item.path} disablePadding>
             <ListItemButton
               component={Link}
@@ -70,6 +80,46 @@ function MainHeader() {
             </ListItemButton>
           </ListItem>
         ))}
+
+        <ListItem disablePadding>
+          {isAuthenticated ? (
+            <ListItemButton
+              onClick={handleLogout}
+              sx={{
+                textAlign: "center",
+                justifyContent: "center",
+                color: "#F0B84A",
+              }}
+            >
+              <ListItemText
+                primary="Sair"
+                sx={{
+                  "& .MuiListItemText-primary": {
+                    fontFamily: '"DM Sans", sans-serif',
+                    fontSize: 16,
+                    fontWeight: 600,
+                  },
+                }}
+              />
+            </ListItemButton>
+          ) : (
+            <ListItemButton
+              component={Link}
+              to="/login"
+              sx={{ textAlign: "center", justifyContent: "center" }}
+            >
+              <ListItemText
+                primary="Entrar"
+                sx={{
+                  "& .MuiListItemText-primary": {
+                    fontFamily: '"DM Sans", sans-serif',
+                    fontSize: 16,
+                  },
+                }}
+              />
+            </ListItemButton>
+          )}
+        </ListItem>
       </List>
     </Box>
   );
@@ -119,8 +169,14 @@ function MainHeader() {
             <MenuIcon />
           </IconButton>
 
-          <Box sx={{ display: { xs: "none", sm: "flex" }, gap: 1 }}>
-            {menuItems.map((item) => (
+          <Box
+            sx={{
+              display: { xs: "none", sm: "flex" },
+              gap: 1,
+              alignItems: "center",
+            }}
+          >
+            {baseMenuItems.map((item) => (
               <Button
                 key={item.path}
                 component={Link}
@@ -139,6 +195,46 @@ function MainHeader() {
                 {item.label}
               </Button>
             ))}
+
+            {isAuthenticated ? (
+              <Button
+                onClick={handleLogout}
+                sx={{
+                  color: "#FAF6EE",
+                  bgcolor: "rgba(240, 184, 74, 0.15)",
+                  border: "1px solid rgba(240, 184, 74, 0.3)",
+                  fontFamily: '"DM Sans", sans-serif',
+                  textTransform: "none",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  px: 2.5,
+                  borderRadius: 2,
+                  "&:hover": {
+                    bgcolor: "rgba(240, 184, 74, 0.3)",
+                    borderColor: "#F0B84A",
+                  },
+                }}
+              >
+                Sair
+              </Button>
+            ) : (
+              <Button
+                component={Link}
+                to="/login"
+                sx={{
+                  color: "primary.contrastText",
+                  fontFamily: '"DM Sans", sans-serif',
+                  textTransform: "none",
+                  fontSize: 14,
+                  fontWeight: 400,
+                  "&:hover": {
+                    bgcolor: "primary.light",
+                  },
+                }}
+              >
+                Entrar
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
@@ -167,7 +263,7 @@ function MainHeader() {
       <Box component="main" sx={{ width: "100%", boxSizing: "border-box" }}>
         <Outlet />
       </Box>
-      <MainFooter/>
+      <MainFooter />
     </Box>
   );
 }

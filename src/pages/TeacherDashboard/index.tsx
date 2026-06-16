@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react"; // Injeção dos hooks essenciais de estado e ciclo de vida
+import { useState, useEffect } from "react";
 import {
   Box,
   Button,
   Container,
   Grid,
   Typography,
-  Paper,
   CircularProgress,
 } from "@mui/material";
 import BannerPattern from "../../components/BannerPattern";
@@ -15,59 +14,8 @@ import Title from "../../components/Title";
 import BookForm from "./components/BookForm";
 import type { Book } from "../../types/api";
 import { bookService } from "../../services/book";
-
-interface DashboardStatCardProps {
-  value: string | number;
-  label: string;
-}
-
-function DashboardStatCard({ value, label }: DashboardStatCardProps) {
-  return (
-    <Paper
-      elevation={0}
-      sx={{
-        bgcolor: "background.paper",
-        border: "1px solid",
-        borderColor: "#EAE2D5",
-        borderRadius: 4,
-        p: 3,
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: 120,
-        boxShadow: "0px 8px 24px rgba(92, 61, 46, 0.03)",
-      }}
-    >
-      <Typography
-        variant="h3"
-        sx={{
-          fontFamily: '"Cormorant Garamond", serif',
-          fontWeight: 700,
-          color: "#BC5A33",
-          lineHeight: 1,
-          mb: 1.5,
-          fontSize: { xs: "2.5rem", sm: "2.75rem", md: "3rem" },
-        }}
-      >
-        {value}
-      </Typography>
-      <Typography
-        variant="body2"
-        sx={{
-          color: "text.secondary",
-          fontSize: 14,
-          fontFamily: '"DM Sans", sans-serif',
-          fontWeight: 500,
-          opacity: 0.8,
-        }}
-      >
-        {label}
-      </Typography>
-    </Paper>
-  );
-}
+import { useNavigate } from "react-router-dom";
+import DashboardStatCard from "./components/DashboardStatCard";
 
 function TeacherDashboard() {
   const [isCreating, setIsCreating] = useState(false);
@@ -76,7 +24,15 @@ function TeacherDashboard() {
   const [averageRating, setAverageRating] = useState<string | number>("0.0");
   const [loading, setLoading] = useState(true);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
+    const isAuthenticated = sessionStorage.getItem("isTeacherAuthenticated");
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
     async function loadDashboardMetrics() {
       try {
         const fetchedBooks = await bookService.getAllBooks();
@@ -109,7 +65,7 @@ function TeacherDashboard() {
     }
 
     loadDashboardMetrics();
-  }, [isCreating]);
+  }, [isCreating, navigate]);
 
   const handleSaveBook = async (bookData: any) => {
     try {
