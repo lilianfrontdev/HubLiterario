@@ -15,14 +15,16 @@ import TeacherBook from "./components/TeacherBook";
 import Text from "../../components/Text";
 import Title from "../../components/Title";
 import BookForm from "./components/BookForm";
-import type { Book } from "../../types/api";
+import type { Book, Reflection } from "../../types/api";
 import { bookService } from "../../services/book";
+import { reflectionService } from "../../services/reflection";
 import { useNavigate } from "react-router-dom";
 import DashboardStatCard from "./components/DashboardStatCard";
 
 function TeacherDashboard() {
   const [isCreating, setIsCreating] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
+  const [reflections, setReflections] = useState<Reflection[]>([]);
   const [totalReflections, setTotalReflections] = useState(0);
   const [averageRating, setAverageRating] = useState<string | number>("0.0");
   const [loading, setLoading] = useState(true);
@@ -39,24 +41,24 @@ function TeacherDashboard() {
 
     async function loadDashboardMetrics() {
       try {
-        const fetchedBooks = await bookService.getAllBooks();
-        setBooks(fetchedBooks);
+        const [fetchedBooks, fetchedReflections] = await Promise.all([
+          bookService.getAllBooks(),
+          reflectionService.getAllReflections(),
+        ]);
 
-        if (fetchedBooks.length > 0) {
-          const reflectionsCount = fetchedBooks.reduce(
-            (acc, b) => acc + (b.reflections || 0),
-            0,
-          );
-          setTotalReflections(reflectionsCount);
-          const ratedBooks = fetchedBooks.filter((b) => (b.rating || 0) > 0);
-          const avg =
-            ratedBooks.length > 0
-              ? (
-                  ratedBooks.reduce((acc, b) => acc + b.rating, 0) /
-                  ratedBooks.length
-                ).toFixed(1)
-              : "0.0";
+        setBooks(fetchedBooks);
+        setReflections(fetchedReflections);
+
+        setTotalReflections(fetchedReflections.length);
+
+        if (fetchedReflections.length > 0) {
+          const avg = (
+            fetchedReflections.reduce((acc, r) => acc + r.stars, 0) /
+            fetchedReflections.length
+          ).toFixed(1);
           setAverageRating(avg);
+        } else {
+          setAverageRating("0.0");
         }
       } catch (error) {
         console.error(
@@ -224,18 +226,36 @@ function TeacherDashboard() {
 
             <Box sx={{ width: "100%", mt: 5 }}>
               {books.length > 0 ? (
-                books.map((book) => (
-                  <TeacherBook
-                    key={book.id}
-                    id={book.id}
-                    title={book.title}
-                    author={book.author}
-                    year={book.year}
-                    reflections={book.reflections || 0}
-                    rating={book.rating || 0}
-                    password={book.password}
-                  />
-                ))
+                books.map((book) => {
+                  const bookReflections = reflections.filter(
+                    (ref) => ref["book-title"] === book.title,
+                  );
+
+                  const bookAvgRating =
+                    bookReflections.length > 0
+                      ? Number(
+                          (
+                            bookReflections.reduce(
+                              (acc, r) => acc + r.stars,
+                              0,
+                            ) / bookReflections.length
+                          ).toFixed(1),
+                        )
+                      : 0;
+
+                  return (
+                    <TeacherBook
+                      key={book.id}
+                      id={book.id}
+                      title={book.title}
+                      author={book.author}
+                      year={book.year}
+                      reflections={bookReflections.length}
+                      rating={bookAvgRating}
+                      password={book.password}
+                    />
+                  );
+                })
               ) : (
                 <Typography
                   color="text.secondary"
