@@ -11,13 +11,13 @@ import BannerTag from "../../components/BannerTag";
 import Title from "../../components/Title";
 import BookCard from "./components/BookCard";
 import Subtitle from "../../components/Subtitle";
-import type { Book } from "../../types/api";
+import type { Book, Reflection } from "../../types/api";
 import { bookService } from "../../services/book";
 import { reflectionService } from "../../services/reflection";
 
 function CollectionPage() {
   const [books, setBooks] = useState<Book[]>([]);
-  const [totalReflections, setTotalReflections] = useState(0);
+  const [allReflections, setAllReflections] = useState<Reflection[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ function CollectionPage() {
         ]);
 
         setBooks(fetchedBooks);
-        setTotalReflections(fetchedReflections.length);
+        setAllReflections(fetchedReflections);
       } catch (error) {
         console.error("Erro ao carregar dados do acervo:", error);
       } finally {
@@ -101,7 +101,7 @@ function CollectionPage() {
               <Typography
                 sx={{ color: "#11CAA0", fontWeight: 700, fontSize: 24 }}
               >
-                {totalReflections}
+                {allReflections.length}
               </Typography>
               <Typography
                 variant="caption"
@@ -125,6 +125,9 @@ function CollectionPage() {
             const formattedTags = book.tags
               ? book.tags.split(",").map((tag) => tag.trim())
               : [];
+            const reflectionsCount = allReflections.filter(
+              (ref) => ref["book-title"] === book.title,
+            ).length;
 
             return (
               <Grid key={book.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
@@ -134,7 +137,7 @@ function CollectionPage() {
                   author={book.author}
                   year={book.year}
                   tags={formattedTags}
-                  reflectionsCount={book.reflections || 0}
+                  reflections={reflectionsCount}
                   rating={book.rating || 0}
                 />
               </Grid>

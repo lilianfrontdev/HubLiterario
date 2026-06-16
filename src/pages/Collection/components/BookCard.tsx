@@ -15,7 +15,7 @@ interface BookCardProps {
   author: string;
   year: number;
   tags: string[];
-  reflectionsCount: number;
+  reflections: number;
   rating: number;
 }
 
@@ -25,7 +25,7 @@ function BookCard({
   author,
   year,
   tags,
-  reflectionsCount,
+  reflections,
   rating,
 }: BookCardProps) {
   return (
@@ -163,8 +163,8 @@ function BookCard({
               variant="caption"
               sx={{ fontWeight: 500, color: "text.secondary" }}
             >
-              {reflectionsCount}{" "}
-              {reflectionsCount === 1 ? "reflexão" : "reflexões"}
+              {reflections}{" "}
+              {reflections === 1 ? "reflexão" : "reflexões"}
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <Typography
